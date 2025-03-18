@@ -1,0 +1,83 @@
+{
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/_out/build",
+            "installDir": "${sourceDir}/_out/install",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/_out/install/${presetName}",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "msvc-base",
+            "hidden": true,
+            "displayName": "MSVC 19.39.33522",
+            "description": "Using Visual Studio 2022 17.9.3",
+            "inherits": "base",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "toolset": "v143",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "C:/Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.39.33522/bin/Hostx64/x64/cl.exe"
+            }
+        },
+        {
+            "name": "strata",
+            "inherits": "msvc-base",
+            "cacheVariables": {
+                "BUILD_STRATA_TESTS": "OFF"
+            }
+        },
+        {
+            "name": "strata-tests",
+            "inherits": "msvc-base",
+            "cacheVariables": {
+                "BUILD_STRATA": "ON",
+                "BUILD_STRATA_TESTS": "ON"
+            }
+        },
+        {
+            "name": "strata-benchmarks",
+            "inherits": "msvc-base",
+            "cacheVariables": {
+                "BUILD_STRATA": "ON",
+                "BUILD_STRATA_BENCHMARKS": "ON"
+            }
+        },
+        {
+            "name": "strata-all",
+            "inherits": "msvc-base",
+            "cacheVariables": {
+                "BUILD_STRATA": "ON",
+                "BUILD_STRATA_TESTS": "ON",
+                "BUILD_STRATA_BENCHMARKS": "ON"
+            }
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "test-base",
+            "hidden": true,
+            "configuration": "Debug",
+            "output": {
+                "outputOnFailure": false
+            },
+            "environment": {
+                "GTEST_COLOR": "yes",
+                "GTEST_OUTPUT": "xml:${sourceDir}/gtest_results.xml",
+                "CTEST_SKIP_DISABLED_TESTS": "ON",
+                "CTEST_PARALLEL_LEVEL": "8"
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "jobs": 8,
+                "stopOnFailure": false
+            }
+        }
+    ]
+}
